@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>D3 Javascript Bar Chart Example #3</title>
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<style>
+
+.bar {
+  fill: steelblue;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+		</style>		
+	</head>
+	<body>
+		<div class="container">
+
+			<h1>D3 Javascript Bar Chart Example #3</h1>
+			<p>
+				This bar chart example is similar to the <a href="2.bar_chart_example2.html">previous example</a>, but the data is loaded from a CSV file, and the bars are oriented vertically as columns. 
+			</p>
+			<p>
+				See <a href="https://bost.ocks.org/mike/bar/3/">Mike Bostock's D3 Bar Chart Tutorial #3</a> for more info.
+			</p>
+
+			<!-- An SVG object that will be manipulated by D3 Javascript-->
+			<svg class="chart"></svg>
+
+			<nav>
+				<p>More examples</p>
+				<ul>
+					<li><a href="0.bar_chart_example0.html">Example 0</a></li>
+					<li><a href="1.bar_chart_example1.html">Example 1</a></li>
+					<li><a href="2.bar_chart_example2.html">Example 2</a></li>
+					<li><a href="3.bar_chart_example3.html">Example 3</a></li>
+					<li><a href="4.bubble_map_example4.html">Example 4</a></li>
+					<li><a href="5.pie_chart_example5.html">Example 5</a></li>
+				</ul>
+			</nav>
+
+		</div>
+
+		<!-- Load official D3 Javascript file -->
+		<script src="js/d3.v3.min.js" charset="utf-8"></script>
+
+		<!-- Run custom Javascript -->
+		<script>
+
+
+var margin = {top: 20, right: 30, bottom: 30, left: 40},
+    width = 600 - margin.left - margin.right,
+    height = 600 - margin.top - margin.bottom;
+
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+	.scale(y)
+	.orient("left");
+
+var chart = d3.select(".chart")
+	.attr("width", width + margin.left + margin.right)
+	.attr("height", height + margin.top + margin.bottom)
+	.append("g")
+	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("example3_data.csv", type, function(error, data) {
+  x.domain(data.map(function(d) { return d.name; }));
+  y.domain([0, d3.max(data, function(d) { return d.value; })]);
+
+  chart.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  chart.append("g")
+      .attr("class", "y axis")
+      .call(yAxis);
+
+  chart.selectAll(".bar")
+      .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.name); })
+      .attr("y", function(d) { return y(d.value); })
+      .attr("height", function(d) { return height - y(d.value); })
+      .attr("width", x.rangeBand());
+});
+
+function type(d) {
+  d.value = +d.value; // coerce to number
+  return d;
+}
+
+
+		</script>
+	</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>D3 Javascript Bar Chart Example #2</title>
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<style>
+
+.chart rect {
+  fill: steelblue;
+}
+
+.chart text {
+  fill: white;
+  font: 10px sans-serif;
+  text-anchor: end;
+}
+
+		</style>		
+	</head>
+	<body>
+		<div class="container">
+
+			<h1>D3 Javascript Bar Chart Example #2</h1>
+			<p>
+				In this bar chart example, we start with an empty Scalable Vector Graphic (SVG) element in the body of the page.  
+				The Javascript code automatically creates an SVG "g" (group) element for each item in the array, and inserts these "g" elements into the SVG element.  
+				The Javascript then creates "rect" and "text" elements that it inserts into each of these "g" elements, and sets the width of the "rect" and contents of the "text" elements to match the corresponding array item's value.  
+				Javascript scales the overall chart and each bar so that it fits within the available space.  
+				Standard CSS is used to do the other styles
+			</p>
+			<p>
+				See <a href="https://bost.ocks.org/mike/bar/2/">Mike Bostock's D3 Bar Chart Tutorial #2</a> for more info.
+			</p>
+
+			<!-- An SVG object that will be manipulated by D3 Javascript-->
+			<svg class="chart"></svg>
+
+			<nav>
+				<p>More examples</p>
+				<ul>
+					<li><a href="0.bar_chart_example0.html">Example 0</a></li>
+					<li><a href="1.bar_chart_example1.html">Example 1</a></li>
+					<li><a href="2.bar_chart_example2.html">Example 2</a></li>
+					<li><a href="3.bar_chart_example3.html">Example 3</a></li>
+					<li><a href="4.bubble_map_example4.html">Example 4</a></li>
+					<li><a href="5.pie_chart_example5.html">Example 5</a></li>					
+				</ul>
+			</nav>
+
+		</div>
+
+		<!-- Load official D3 Javascript file -->
+		<script src="js/d3.v3.min.js" charset="utf-8"></script>
+
+		<!-- Run custom Javascript -->
+		<script>
+
+//store some data as an array
+var data = [4, 8, 15, 16, 23, 42];
+
+//store global settings for the chart as variables
+var chartWidth = 560;
+var barHeight = 20;
+
+//use d3's linear scaling function to map the values in our data to fit the width of the chart
+var x = d3.scale.linear()
+    .domain([0, d3.max(data)])
+    .range([0, chartWidth]);
+
+//set the width and height of the chart
+var chart = d3.select(".chart")
+    .attr("width", chartWidth)
+    .attr("height", barHeight * data.length);
+
+//add "g" svg elements for each data point
+var bar = chart.selectAll("g")
+    .data(data)
+  .enter().append("g")
+    .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
+
+//append an svg "rect" element to each "g" element, and set the width and height of each rectangle
+bar.append("rect")
+    .attr("width", x)
+    .attr("height", barHeight - 1);
+
+//append an svg "text" element to each "g" element, and set the x and y coordinates and inner text of this element
+bar.append("text")
+    .attr("x", function(d) { return x(d) - 3; })
+    .attr("y", barHeight / 2)
+    .attr("dy", ".35em")
+    .text(function(d) { return d; });
+
+		</script>
+	</body>
+</html>

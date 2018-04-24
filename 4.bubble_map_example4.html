@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>D3 Javascript Bubble Map Example #4</title>
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<style>
+
+.chart rect {
+  fill: steelblue;
+}
+
+.chart text {
+  fill: white;
+  font: 10px sans-serif;
+  text-anchor: end;
+}
+
+		</style>		
+	</head>
+	<body>
+		<div class="container">
+
+			<h1>D3 Javascript Bubble Map Example #4</h1>
+			<p>
+				In this example, we create a bubble map.  The data is stored as integers in an array.  For each item in the array, we create a bubble at a random position with a random color.  The radius of the bubble is proportional to the corresponding value in the array, and each value is placed in the center of the corresponding bubble.
+			</p>
+
+
+			<!-- An SVG object that will be manipulated by D3 Javascript-->
+			<svg class="chart"></svg>
+
+			<nav>
+				<p>More examples</p>
+				<ul>
+					<li><a href="0.bar_chart_example0.html">Example 0</a></li>
+					<li><a href="1.bar_chart_example1.html">Example 1</a></li>
+					<li><a href="2.bar_chart_example2.html">Example 2</a></li>
+					<li><a href="3.bar_chart_example3.html">Example 3</a></li>
+					<li><a href="4.bubble_map_example4.html">Example 4</a></li>
+					<li><a href="5.pie_chart_example5.html">Example 5</a></li>
+				</ul>
+			</nav>
+
+		</div>
+
+		<!-- Load official D3 Javascript file -->
+		<script src="js/d3.v3.min.js" charset="utf-8"></script>
+
+		<!-- Run custom Javascript -->
+		<script>
+
+//store some data as an array
+var data = [4, 8, 15, 16, 23, 42];
+
+//store global settings for the chart as variables
+var chartWidth = 600;
+var chartHeight = 600;
+
+//use d3's linear scaling function to map the values in our data to fit the width of the chart
+var x = d3.scale.linear()
+    .domain([0, d3.max(data)])
+    .range([0, Math.floor(chartWidth/2)]);
+
+//set the width and height of the chart
+var chart = d3.select(".chart")
+    .attr("width", chartWidth)
+    .attr("height", chartHeight);
+
+//add "g" svg elements for each data point
+var bubble = chart.selectAll("g")
+    .data(data)
+  .enter().append("g")
+    .attr("transform", function(d, i) { 
+    	var xCoord = Math.floor(Math.random()*chartWidth);
+    	var yCoord = Math.floor(Math.random()*chartHeight);
+    	return "translate(" + xCoord + "," + yCoord + ")"; 
+});
+
+//append an svg "rect" element to each "g" element, and set the width and height of each rectangle
+bubble.append("circle")
+    .attr("r", x)
+    .attr("fill", function(d,i) {
+
+    	//generate a random hex color
+	var r =  Math.floor((Math.random()) * 255).toString(16);
+	var g =  Math.floor((Math.random()) * 255).toString(16);
+	var b =  Math.floor((Math.random()) * 255).toString(16);
+	var hexColor = "#" + r + g + b;
+    	return hexColor;
+});
+
+//append an svg "text" element to each "g" element, and set the x and y coordinates and inner text of this element
+bubble.append("text")
+    .attr("x", 0)
+    .attr("y", 0)
+    .text(function(d) { return d; });
+
+		</script>
+	</body>
+</html>
